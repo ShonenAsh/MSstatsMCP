@@ -10,14 +10,10 @@ Scope: MSstats and MSstatsConvert. Label-free only for now.
     - Models may try to reason from the output of R snippets they generated, bypassing the checked tools.
 3. Tools return data handles plus a summary.
     - The summary covers dimensions, columns, replicates per condition and missingness.
-4. Tools return evidence, not verdicts. 
-    - Output is raw results only, such as a
-   condition × batch crosstab, never `"verdict": "confounded"`. This keeps the
-   model's reasoning traceable and free of assumptions baked into the server.
+4. Tools return evidence (raw results), not verdicts. 
+    - This keeps the model's reasoning traceable and free of assumptions baked into the server.
 5. The user defines the hypothesis, assumptions and experiment details before any
    group comparison.
-   - This is workflow context for the server, not a property of any
-   single tool.
 
 ## Tools
 
@@ -25,8 +21,8 @@ Scope: MSstats and MSstatsConvert. Label-free only for now.
 |---|---|
 | `inspect_file(path)` | Metadata, columns, guessed vendor format |
 | `inspect_object(handle = NULL)` | Every handle if `NULL`, otherwise details of one |
-| `load_annotation(path)` | Handle, and a table of Condition × BioReplicate × Run counts |
-| `check_design(annotation, batch = NULL)` | Replicates per group, paired or independent, condition × batch crosstab (or a note that batch is missing) |
+| `load_annotation(path)` | Handle, and a table of Condition x BioReplicate x Run counts |
+| `check_design(annotation, batch = NULL)` | Replicates per group, paired or independent, condition x batch crosstab (or a note that batch is missing) |
 | `convert(format, input, annotation, options)` | MSstats-format handle, plus rows removed per filter. `format = "MSstats"` validates only. |
 | `data_process(input, normalization, summary_method, impute, ...)` | Job ID. When done: handle, and a missingness summary aggregated per protein across runs |
 | `job_status(id)` | Running, done (with the result) or failed (with the error) |
