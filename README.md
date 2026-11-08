@@ -54,7 +54,7 @@ raw_1        source: load_example(dataset = DDARawData)
 
 ## Persistence
 
-State lives in `.msstats-mcp/` in the repo (gitignored):
+State lives in `.msstats-mcp/` in the repo:
 
 ```
 .msstats-mcp/
