@@ -31,9 +31,8 @@ Restart Claude Code, or run `/mcp`. `--no-init-file` keeps renv's startup messag
 3. Tools return data handles plus a summary.
     - The summary covers dimensions, columns, replicates per condition and missingness.
 4. Tools return evidence, not verdicts. 
-    - Output is raw results only, such as a
-   condition x batch crosstab, never `"verdict": "confounded"`. This keeps the
-   model's reasoning traceable and free of assumptions baked into the server.
+    - Output is raw results only. 
+    - This keeps the model's reasoning traceable and free of assumptions baked into the server.
 5. The user defines the hypothesis, assumptions and experiment details before any
    group comparison.
 
@@ -55,7 +54,7 @@ raw_1        source: load_example(dataset = DDARawData)
 
 ## Persistence
 
-State lives in `.msstats-mcp/` in the repo (gitignored):
+State lives in `.msstats-mcp/` in the repo:
 
 ```
 .msstats-mcp/
