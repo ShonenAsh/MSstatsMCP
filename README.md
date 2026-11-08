@@ -36,8 +36,6 @@ Restart Claude Code, or run `/mcp`. `--no-init-file` keeps renv's startup messag
    model's reasoning traceable and free of assumptions baked into the server.
 5. The user defines the hypothesis, assumptions and experiment details before any
    group comparison.
-   - This is workflow context for the server, not a property of any
-   single tool.
 
 ## Handles
 
@@ -101,5 +99,3 @@ R/
 | `model_qc_plot(handle, type)` | planned | PNG image: residual or normality plot |
 | `design_sample_size(comparison, desired_fc, fdr, num_sample \| power)` | planned | Sample size or power. Needs a fitted `group_comparison`. |
 | `export(handle, path)` | planned | Path of the written CSV or RDS |
-
-
