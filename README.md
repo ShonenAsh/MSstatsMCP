@@ -1,4 +1,8 @@
 # MSstatsMCP
+
+> [!CAUTION]
+> In active development, not recommended for real experiments
+
 R MCP server implementation for MSstats family of packages
 
 Scope: MSstats and MSstatsConvert. Label-free only for now.
