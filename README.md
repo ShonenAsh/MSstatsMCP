@@ -102,4 +102,4 @@ R/
 | `design_sample_size(comparison, desired_fc, fdr, num_sample \| power)` | planned | Sample size or power. Needs a fitted `group_comparison`. |
 | `export(handle, path)` | planned | Path of the written CSV or RDS |
 
-Upstream bugs found along the way, with workarounds: [known-bugs.md](known-bugs.md).
+
