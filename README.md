@@ -50,7 +50,18 @@ processed_1  source: data_process(input = raw_1, normalization = equalizeMedians
 raw_1        source: load_example(dataset = DDARawData)
 ```
 
-`inspect_object()` lists every handle with its type, label, creation time and source. `inspect_object(handle)` adds the summary saved at creation.
+`inspect_object()` lists every handle with its type, label, creation time and source, plus unfinished jobs. `inspect_object(handle)` adds the summary saved at creation.
+
+## Jobs
+
+Slow tools (`data_process` for now) run in a separate R process via `callr`, so the server stays responsive and a crash in MSstats does not take it down. The tool reserves the result's handle, starts the job and returns at once:
+
+```
+data_process(input = raw_1)          -> processed_2, status: running
+job_status(processed_2, wait = 30)   -> status: done, plus the summary
+```
+
+The handle is the job id. Status is `running`, `done`, `failed` (with the R error) or `interrupted` (the server stopped or the process crashed). Using a handle before its job is done returns an error naming the status. Jobs are killed when the server exits.
 
 ## Persistence
 
@@ -62,7 +73,9 @@ State lives in `.msstats-mcp/` in the repo:
 │   ├── raw_1.rds          # the object (uncompressed, for speed)
 │   ├── raw_1.meta.rds     # handle, type, label, created, source, summary
 │   └── counters.rds       # last number used per type
-└── logs/                  # one MSstats log per call
+├── jobs/
+│   └── processed_2.rds    # status, start and end times, result or error
+└── logs/                  # one MSstats log per call, plus <handle>.out per job
 ```
 
 Objects are also kept in memory. Handles survive server restarts: after a restart, objects load from disk on first use. Listing reads only the `.meta.rds` files.
@@ -75,6 +88,7 @@ R/
 ├── registry.R        # add_tool() and msstats_tools()
 ├── utils.R           # stdout guard, state paths, log readers
 ├── store.R           # handles and persistence
+├── jobs.R            # background jobs
 └── tool-<name>.R     # one tool per file: implementation + add_tool()
 ```
 
@@ -85,12 +99,12 @@ R/
 | `server_info()` | done | R, MSstats and MSstatsConvert versions |
 | `load_example(dataset, label)` | done | `raw` handle for a bundled MSstats dataset, plus design and missingness summary |
 | `inspect_object(handle = NULL)` | done | Every handle if `NULL`, otherwise details of one |
-| `data_process(input, normalization, summary_method, impute, censored_int, label)` | done | `processed` handle, plus per-protein missingness and imputation, removed features, censored values. Runs in the foreground until background jobs land. |
+| `data_process(input, normalization, summary_method, impute, censored_int, label)` | done | `processed` handle at once; runs as a job. The result (via `job_status`) has per-protein missingness and imputation, removed features, censored values. |
+| `job_status(handle, wait)` | done | Running, done (with the result), failed (with the error) or interrupted |
 | `inspect_file(path)` | planned | Metadata, columns, guessed vendor format |
 | `load_annotation(path)` | planned | Handle, and a table of Condition x BioReplicate x Run counts |
 | `check_design(annotation, batch = NULL)` | planned | Replicates per group, paired or independent, condition x batch crosstab (or a note that batch is missing) |
 | `convert(format, input, annotation, options)` | planned | MSstats-format handle, plus rows removed per filter. `format = "MSstats"` validates only. |
-| `job_status(id)` | planned | Running, done (with the result) or failed (with the error) |
 | `qc_plot(handle, type, proteins)` | planned | PNG image: QC, profile or condition plot |
 | `build_contrast(conditions, comparisons)` | planned | Contrast matrix built from specs like `"Treated - Vehicle"`, echoed back for confirmation |
 | `group_comparison(processed, contrast)` | planned | Handle, significant proteins per comparison at the given FDR, count of infinite fold changes |

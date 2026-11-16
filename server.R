@@ -14,13 +14,14 @@ source(file.path("renv", "activate.R"))
 source(file.path("R", "registry.R"))
 source(file.path("R", "utils.R"))
 source(file.path("R", "store.R"))
+source(file.path("R", "jobs.R"))
 for (f in list.files("R", pattern = "^tool-.*[.]R$", full.names = TRUE)) {
-  source(f)
+	source(f)
 }
 
 suppressPackageStartupMessages({
-  library(MSstats)
-  library(MSstatsConvert)
+	library(MSstats)
+	library(MSstatsConvert)
 })
 
 sink()
